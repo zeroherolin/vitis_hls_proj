@@ -2,7 +2,7 @@
 #include <hls_math.h>
 #include <fstream>
 #include <iostream>
-#include "filter.h"
+#include "fft_top.h"
 
 void read_input_from_file(
     const char* real_file,
