@@ -10,12 +10,13 @@
 const char FFT_INPUT_WIDTH  = 32;
 const char FFT_OUTPUT_WIDTH = FFT_INPUT_WIDTH;
 const char FFT_STATUS_WIDTH = 8;
-const char FFT_CONFIG_WIDTH = 24;
+const bool FFT_HAS_NFFT     = true;
+const char FFT_CONFIG_WIDTH = FFT_HAS_NFFT ? 24 : 16;
 const char FFT_NFFT_MAX     = 12;
 const int  FFT_LENGTH       = 1 << FFT_NFFT_MAX; // 4096
 
 struct config1 : hls::ip_fft::params_t {
-    static const bool has_nfft = true;
+    static const bool has_nfft = FFT_HAS_NFFT;
     static const bool ovflo = true;
     static const unsigned input_data_width   = FFT_INPUT_WIDTH;
     static const unsigned output_data_width  = FFT_OUTPUT_WIDTH;

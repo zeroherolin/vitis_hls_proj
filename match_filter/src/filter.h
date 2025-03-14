@@ -1,5 +1,5 @@
-#ifndef __FFT_TOP_H__
-#define __FFT_TOP_H__
+#ifndef __FILTER_H__
+#define __FILTER_H__
 
 #include <ap_fixed.h>
 #include <ap_int.h>
@@ -7,10 +7,17 @@
 #include <hls_fft.h>
 #include <hls_math.h>
 
+#define BD     200000000.0f
+#define FS     512000000.0f
+#define TP     4.0e-6f
+#define TP_NUM ((int)(TP * FS)) // 2048
+#define X_LEN  2048
+#define X1_LEN (X_LEN + TP_NUM) // 4096
+
 const char FFT_INPUT_WIDTH  = 32;
 const char FFT_OUTPUT_WIDTH = FFT_INPUT_WIDTH;
 const char FFT_STATUS_WIDTH = 8;
-const bool FFT_HAS_NFFT     = true;
+const bool FFT_HAS_NFFT     = false;
 const char FFT_CONFIG_WIDTH = FFT_HAS_NFFT ? 24 : 16;
 const char FFT_NFFT_MAX     = 12;
 const int  FFT_LENGTH       = 1 << FFT_NFFT_MAX; // 4096
@@ -36,26 +43,12 @@ typedef hls::ip_fft::status_t<config1> status_t;
 typedef float data_t;
 typedef std::complex<data_t> cplx;
 
-void dummy_proc_fe(
-    bool direction,
-    config_t* config,
-    cplx in[FFT_LENGTH],
-    cplx out[FFT_LENGTH]
-);
-
-void dummy_proc_be(
-    status_t* status_in,
-    bool* ovflo,
-    cplx in[FFT_LENGTH],
-    cplx out[FFT_LENGTH]
-);
-
-void fft_top(
-    bool direction,
-    cplx in[FFT_LENGTH],
-    cplx out[FFT_LENGTH],
-    bool* ovflo
+void filter_top(
+    hls::stream<cplx>& x,
+    int jx,
+    data_t gamma,
+    hls::stream<data_t>& x_judgment,
+    data_t &max_out
 );
 
 #endif
-
